@@ -139,8 +139,9 @@ function App() {
 
     for (let i = 0; i < retries; i++) {
       try {
-        console.log(`Attempt ${i + 1} to connect to backend...`);
-        const res = await fetch("http://127.0.0.1:5001/calculate", {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5001";
+        console.log(`Attempt ${i + 1} to connect to backend at ${baseUrl}...`);
+        const res = await fetch(`${baseUrl}/calculate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
