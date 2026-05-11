@@ -54,7 +54,6 @@ cd UI/alimony-calculator
 bun install  # or npm install
 bun dev      # or npm run dev
 ```
-*The UI will be available at **http://localhost:5173**.*
 
 ---
 
