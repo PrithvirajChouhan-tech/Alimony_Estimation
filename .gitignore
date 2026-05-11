@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+venv/
+.venv/
+bin/
+obj/
+
+# Build outputs
+dist/
+build/
+out/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs and databases
+*.log
+*.sqlite
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+.env.local
+
+# Tool-specific
+.tanstack/
+.lovable/
+.vite/
+.npm/
+bun.lock
+package-lock.json (if you prefer yarn/bun)
