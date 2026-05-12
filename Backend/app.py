@@ -4,10 +4,20 @@ import joblib
 import numpy as np
 import traceback
 import sys
+import os
+import threading
+import time
+import urllib.request
 
 app = Flask(__name__)
-# Enable CORS for React frontend connection
-CORS(app)
+
+# Allow requests from Cloudflare deployment and localhost (dev)
+ALLOWED_ORIGINS = [
+    "https://alimonyprediction.dipendrsinghchouhan.workers.dev",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+CORS(app, origins=ALLOWED_ORIGINS, supports_credentials=True)
 
 # Load calculation engines and scaler on startup
 engine1 = None
@@ -59,6 +69,11 @@ def health():
         "engines_loaded": engine1 is not None
     })
 
+@app.route('/ping', methods=['GET'])
+def ping():
+    """Lightweight ping endpoint to keep Render free-tier alive"""
+    return jsonify({"status": "ok"}), 200
+
 @app.route('/calculate', methods=['POST'])
 def calculate():
     try:
@@ -106,10 +121,25 @@ def calculate():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-import os
+def keep_alive():
+    """Ping self every 14 minutes to prevent Render free-tier from sleeping."""
+    SELF_URL = os.environ.get(
+        "RENDER_EXTERNAL_URL",
+        "https://ml-based-alimony-estimation-platform.onrender.com"
+    )
+    while True:
+        time.sleep(14 * 60)  # 14 minutes
+        try:
+            urllib.request.urlopen(f"{SELF_URL}/ping", timeout=10)
+            print("[KEEP-ALIVE] Ping sent successfully.")
+        except Exception as e:
+            print(f"[KEEP-ALIVE] Ping failed: {e}")
 
 if __name__ == '__main__':
     # Use PORT environment variable if available (standard for cloud deployment)
     port = int(os.environ.get('PORT', 5001))
     print(f"Starting Alimony Calculation Backend on port {port}...")
-    app.run(host='0.0.0.0', port=port, debug=True)
+    # Start keep-alive thread to prevent Render free-tier cold starts
+    t = threading.Thread(target=keep_alive, daemon=True)
+    t.start()
+    app.run(host='0.0.0.0', port=port, debug=False)
