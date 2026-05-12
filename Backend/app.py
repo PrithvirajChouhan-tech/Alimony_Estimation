@@ -125,7 +125,7 @@ def keep_alive():
     """Ping self every 14 minutes to prevent Render free-tier from sleeping."""
     SELF_URL = os.environ.get(
         "RENDER_EXTERNAL_URL",
-        "https://ml-based-alimony-estimation-platform.onrender.com"
+        "https://alimony-prediction.onrender.com"
     )
     while True:
         time.sleep(14 * 60)  # 14 minutes
