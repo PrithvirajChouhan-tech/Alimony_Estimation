@@ -139,7 +139,7 @@ function App() {
 
     for (let i = 0; i < retries; i++) {
       try {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5001";
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || "https://ml-based-alimony-estimation-platform-production.up.railway.app";
         console.log(`Attempt ${i + 1} to connect to backend at ${baseUrl}...`);
         const res = await fetch(`${baseUrl}/calculate`, {
           method: "POST",
