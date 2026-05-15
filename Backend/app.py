@@ -5,9 +5,6 @@ import numpy as np
 import traceback
 import sys
 import os
-import threading
-import time
-import urllib.request
 
 app = Flask(__name__)
 CORS(app)
@@ -118,19 +115,6 @@ def calculate():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-def keep_alive():
-    """Ping self every 14 minutes to prevent Render free-tier from sleeping."""
-    SELF_URL = os.environ.get(
-        "RENDER_EXTERNAL_URL",
-        "https://alimony-prediction.onrender.com"
-    )
-    while True:
-        time.sleep(14 * 60)  # 14 minutes
-        try:
-            urllib.request.urlopen(f"{SELF_URL}/ping", timeout=10)
-            print("[KEEP-ALIVE] Ping sent successfully.")
-        except Exception as e:
-            print(f"[KEEP-ALIVE] Ping failed: {e}")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
