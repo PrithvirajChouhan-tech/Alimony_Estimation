@@ -10,14 +10,7 @@ import time
 import urllib.request
 
 app = Flask(__name__)
-
-# Allow requests from Cloudflare deployment and localhost (dev)
-ALLOWED_ORIGINS = [
-    "https://alimonyprediction.dipendrsinghchouhan.workers.dev",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
-CORS(app, origins=ALLOWED_ORIGINS, supports_credentials=True)
+CORS(app)
 
 # Load calculation engines and scaler on startup
 engine1 = None
@@ -135,11 +128,5 @@ def keep_alive():
         except Exception as e:
             print(f"[KEEP-ALIVE] Ping failed: {e}")
 
-if __name__ == '__main__':
-    # Use PORT environment variable if available (standard for cloud deployment)
-    port = int(os.environ.get('PORT', 5001))
-    print(f"Starting Alimony Calculation Backend on port {port}...")
-    # Start keep-alive thread to prevent Render free-tier cold starts
-    t = threading.Thread(target=keep_alive, daemon=True)
-    t.start()
-    app.run(host='0.0.0.0', port=port, debug=False)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
