@@ -12,6 +12,10 @@ import urllib.request
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/')
+def home():
+    return "Alimony Calculation Engine is running!"
+
 # Load calculation engines and scaler on startup
 engine1 = None
 engine2 = None
