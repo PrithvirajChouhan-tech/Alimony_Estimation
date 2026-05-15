@@ -26,7 +26,7 @@ An advanced, machine-learning-powered estimation engine for monthly alimony and 
 | **Frontend** | React 19, TanStack Router, Framer Motion, Tailwind CSS, Lucide Icons |
 | **Backend** | Flask, Flask-CORS, Joblib, Scikit-Learn, NumPy |
 | **Styling** | Modern Vanilla CSS + Glassmorphism |
-| **Deployment** | Ready for Cloudflare (Frontend) & Python Anywhere/Heroku (Backend) |
+| **Deployment** | Cloudflare Workers (Frontend) & Railway (Backend) |
 
 ---
 
@@ -51,9 +51,16 @@ python app.py
 ### 3️⃣ Start the Frontend
 ```bash
 cd UI/alimony-calculator
-bun install  # or npm install
-bun dev      # or npm run dev
+bun install
+bun dev
 ```
+
+---
+
+## ☁️ Live Deployment
+
+- **Frontend**: [alimonyprediction.dipendrsinghchouhan.workers.dev](https://alimonyprediction.dipendrsinghchouhan.workers.dev)
+- **Backend API**: [ml-based-alimony-estimation-platform-production.up.railway.app](https://ml-based-alimony-estimation-platform-production.up.railway.app)
 
 ---
 
@@ -61,13 +68,14 @@ bun dev      # or npm run dev
 
 ```bash
 Alimony_Estimation/
-├── Backend/               # Python Flask API
+├── Backend/               # Python Flask API (Railway)
 │   ├── engines/           # ML Models (.pkl)
 │   ├── data/              # Datasets
-│   └── notebooks/         # Analysis & Training
-├── UI/                    # React Frontend
+│   ├── app.py             # Server Logic
+│   └── Procfile           # Railway Instructions
+├── UI/                    # React Frontend (Cloudflare)
 │   └── alimony-calculator/
-├── docs/                  # Documentation
+├── docs/                  # Project Documentation & Guides
 └── scripts/               # Utility Scripts
 ```
 
