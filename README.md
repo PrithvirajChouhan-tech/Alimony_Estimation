@@ -1,5 +1,8 @@
 # ⚖️ Alimony Estimation Engine
 
+**[🚀 Live Website](https://alimonyprediction.dipendrsinghchouhan.workers.dev)**
+
+
 [![GitHub stars](https://img.shields.io/github/stars/PrithvirajChouhan-tech/Alimony_Estimation?style=for-the-badge&color=gold)](https://github.com/PrithvirajChouhan-tech/Alimony_Estimation/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Backend-Flask-green?style=for-the-badge&logo=flask)](https://flask.palletsprojects.com/)
@@ -55,11 +58,8 @@ bun install
 bun dev
 ```
 
----
-
 ## ☁️ Live Deployment
 
-- **Frontend**: [alimonyprediction.dipendrsinghchouhan.workers.dev](https://alimonyprediction.dipendrsinghchouhan.workers.dev)
 - **Backend API**: [ml-based-alimony-estimation-platform-production.up.railway.app](https://ml-based-alimony-estimation-platform-production.up.railway.app)
 
 ---
