@@ -10,6 +10,7 @@ import {
   RotateCcw,
   IndianRupee,
   CalendarClock,
+  User,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -91,7 +92,7 @@ function App() {
   const [screen, setScreen] = useState<Screen>("hero");
   const [step, setStep] = useState(1);
   const [data, setData] = useState<FormData>(defaultForm);
-  const [result, setResult] = useState<{ monthly: number, months: number } | null>(null);
+  const [result, setResult] = useState<{ monthly: number, months: number, recipient: string } | null>(null);
   const [animationDone, setAnimationDone] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
@@ -139,7 +140,11 @@ function App() {
 
     for (let i = 0; i < retries; i++) {
       try {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL || "https://ml-based-alimony-estimation-platform-production.up.railway.app";
+        let baseUrl = import.meta.env.VITE_API_BASE_URL;
+        if (!baseUrl) {
+          const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+          baseUrl = isLocal ? "http://127.0.0.1:5000" : "/api";
+        }
         console.log(`Attempt ${i + 1} to connect to backend at ${baseUrl}...`);
         const res = await fetch(`${baseUrl}/calculate`, {
           method: "POST",
@@ -153,7 +158,8 @@ function App() {
         if (resData.status === "success") {
           setResult({
             monthly: Math.round(resData.monthly_alimony),
-            months: Math.round(resData.duration_months)
+            months: Math.round(resData.duration_months),
+            recipient: resData.recipient || "None"
           });
           return; // Success!
         } else {
@@ -906,7 +912,7 @@ function useCountUp(target: number, duration = 1400) {
   return val;
 }
 
-function ResultView({ onReset, prediction }: { onReset: () => void, prediction: { monthly: number, months: number } | null }) {
+function ResultView({ onReset, prediction }: { onReset: () => void, prediction: { monthly: number, months: number, recipient: string } | null }) {
   // Use predicted values from backend, fallback to placeholders if api fails
   const monthly = prediction?.monthly ?? 32500;
   const months = prediction?.months ?? 18;
@@ -937,6 +943,20 @@ function ResultView({ onReset, prediction }: { onReset: () => void, prediction: 
     [monthlyAnim]
   );
 
+  const { durationValue, durationSub } = useMemo(() => {
+    const y = Math.floor(monthsAnim / 12);
+    const m = monthsAnim % 12;
+    if (monthsAnim === 0) return { durationValue: "0M", durationSub: "" };
+    
+    const yStr = y > 0 ? `${y}Y` : "";
+    const mStr = m > 0 ? `${m}M` : "";
+    
+    return {
+      durationValue: y > 0 && m > 0 ? `${yStr} ${mStr}` : (y > 0 ? yStr : mStr),
+      durationSub: ""
+    };
+  }, [monthsAnim]);
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 16 }}
@@ -955,7 +975,7 @@ function ResultView({ onReset, prediction }: { onReset: () => void, prediction: 
         Based on the details you provided.
       </p>
 
-      <div className="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
         <ResultCard
           icon={<IndianRupee className="h-5 w-5" />}
           label="Monthly Alimony"
@@ -965,8 +985,14 @@ function ResultView({ onReset, prediction }: { onReset: () => void, prediction: 
         <ResultCard
           icon={<CalendarClock className="h-5 w-5" />}
           label="Duration"
-          value={`${monthsAnim}`}
-          sub="months"
+          value={durationValue}
+          sub={durationSub}
+        />
+        <ResultCard
+          icon={<User className="h-5 w-5" />}
+          label="Recipient"
+          value={prediction?.recipient ?? "None"}
+          sub="receives alimony"
         />
       </div>
 

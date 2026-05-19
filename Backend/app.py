@@ -105,9 +105,31 @@ def calculate():
         monthly_alimony = max(0.0, float(engine1.predict(features_scaled)[0]))
         duration_months = max(0.0, float(engine2.predict(features_scaled)[0]))
 
+        husband_inc = float(data.get("husband_income", 0))
+        wife_inc = float(data.get("wife_income", 0))
+
+        # --- FIX FOR ML BIAS: If wife earns significantly more but model predicts 0 ---
+        if wife_inc > (husband_inc * 1.5) and monthly_alimony < 500:
+            # Apply a standard formula: 25% of wife's income minus 20% of husband's income
+            monthly_alimony = max(0.0, (wife_inc * 0.25) - (husband_inc * 0.20))
+            if duration_months < 6:
+                duration_months = 24.0
+
+        # Determine who gets the alimony based on income disparity
+        recipient = "None"
+        if monthly_alimony > 0:
+            if husband_inc > wife_inc:
+                recipient = "Wife"
+            elif wife_inc > husband_inc:
+                recipient = "Husband"
+            else:
+                # Default to wife if incomes are exactly equal and alimony is awarded
+                recipient = "Wife"
+
         return jsonify({
             "monthly_alimony": monthly_alimony,
             "duration_months": duration_months,
+            "recipient": recipient,
             "status": "success"
         })
 

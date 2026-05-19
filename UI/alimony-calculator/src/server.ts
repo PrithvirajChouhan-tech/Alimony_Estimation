@@ -69,11 +69,46 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+      
+      // If client requests /api/*, reverse proxy it to the Railway backend.
+      // This routes the traffic server-side through Cloudflare to bypass ISP-level domain blocks.
+      if (url.pathname.startsWith("/api/")) {
+        const backendBaseUrl = "https://ml-based-alimony-estimation-platform-production.up.railway.app";
+        const targetUrl = `${backendBaseUrl}${url.pathname.replace(/^\/api/, "")}${url.search}`;
+        
+        console.log(`[Proxy] ${request.method} ${url.pathname} -> ${targetUrl}`);
+        
+        const headers = new Headers(request.headers);
+        headers.delete("host"); // Let fetch automatically assign the correct host header for the backend
+        
+        const proxyRequest = new Request(targetUrl, {
+          method: request.method,
+          headers: headers,
+          body: request.method !== "GET" && request.method !== "HEAD" ? await request.clone().arrayBuffer() : undefined,
+          redirect: "manual",
+        });
+        
+        const response = await fetch(proxyRequest);
+        
+        // Inject CORS headers to guarantee smooth client compatibility
+        const corsHeaders = new Headers(response.headers);
+        corsHeaders.set("Access-Control-Allow-Origin", "*");
+        corsHeaders.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+        corsHeaders.set("Access-Control-Allow-Headers", "*");
+        
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: corsHeaders,
+        });
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
-      console.error(error);
+      console.error("[Worker Error]", error);
       return brandedErrorResponse();
     }
   },
