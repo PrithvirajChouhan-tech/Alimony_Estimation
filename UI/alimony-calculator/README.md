@@ -1,14 +1,18 @@
+<div align="center">
+
 # ⚖️ Alimony Estimation Engine
 
-## 🌐 [Visit Live Website](https://alimonyprediction.dipendrsinghchouhan.workers.dev)
+An advanced, machine-learning-powered estimation engine for monthly alimony and duration, featuring a high-end glassmorphic React UI and a robust Flask ML backend.
 
----
+<br />
+
+[![Live Application](https://img.shields.io/badge/Live_Demo-Visit_Website-0052FF?style=for-the-badge&logo=google-chrome&logoColor=white)](https://alimonyprediction.dipendrsinghchouhan.workers.dev)
 [![GitHub stars](https://img.shields.io/github/stars/PrithvirajChouhan-tech/Alimony_Estimation?style=for-the-badge&color=gold)](https://github.com/PrithvirajChouhan-tech/Alimony_Estimation/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Backend-Flask-green?style=for-the-badge&logo=flask)](https://flask.palletsprojects.com/)
-[![React](https://img.shields.io/badge/Frontend-React-blue?style=for-the-badge&logo=react)](https://react.dev/)
+[![Flask Backend](https://img.shields.io/badge/Backend-Flask-green?style=for-the-badge&logo=flask)](https://flask.palletsprojects.com/)
+[![React Frontend](https://img.shields.io/badge/Frontend-React-blue?style=for-the-badge&logo=react)](https://react.dev/)
 
-An advanced, machine-learning-powered estimation engine for monthly alimony and duration. This project features a high-end, glassmorphic UI built with **React & Framer Motion** and a robust **Flask** backend using **Scikit-Learn** models.
+</div>
 
 ---
 
@@ -60,7 +64,8 @@ bun dev
 
 ## ☁️ Live Deployment
 
-- **Backend API**: [ml-based-alimony-estimation-platform-production.up.railway.app](https://ml-based-alimony-estimation-platform-production.up.railway.app)
+- **Frontend App**: [Alimony Estimation Web App](https://alimonyprediction.dipendrsinghchouhan.workers.dev)
+- **Backend API**: [Flask ML API (Railway)](https://ml-based-alimony-estimation-platform-production.up.railway.app)
 
 ---
 
